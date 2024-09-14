@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D香水瓶</title>
+    <style>
+        body { margin: 0; background-color: #f0f0f0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let scene, camera, renderer, bottle, liquids;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0xf0f0f0, 1);
+            document.body.appendChild(renderer.domElement);
+
+            // 创建瓶子
+            const bottleGeometry = new THREE.CylinderGeometry(1, 1, 3, 32);
+            const bottleMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.1,
+                roughness: 0,
+                metalness: 0,
+                side: THREE.DoubleSide
+            });
+            bottle = new THREE.Mesh(bottleGeometry, bottleMaterial);
+            scene.add(bottle);
+
+            // 创建液体层
+            liquids = [];
+            const liquidColors = [0xff0000, 0x00ff00, 0x0000ff];
+            const liquidHeights = [1.2, 0.9, 0.6];
+            for (let i = 0; i < 3; i++) {
+                const liquidGeometry = new THREE.CylinderGeometry(0.95, 0.95, liquidHeights[i], 32);
+                const liquidMaterial = new THREE.MeshPhongMaterial({
+                    color: liquidColors[i],
+                    transparent: true,
+                    opacity: 1,
+                    shininess: 100,
+                });
+                const liquid = new THREE.Mesh(liquidGeometry, liquidMaterial);
+                liquid.position.y = -1.5 + liquidHeights[i] / 2 + liquidHeights.slice(0, i).reduce((a, b) => a + b, 0);
+                scene.add(liquid);  // 直接添加到场景中，而不是瓶子内
+                liquids.push(liquid);
+            }
+
+            // 添加环境光
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            // 添加平行光
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(5, 5, 5);
+            scene.add(directionalLight);
+
+            camera.position.z = 5;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // 旋转整个场景
+            scene.rotation.y += 0.01;
+
+            // 液体波动效果
+            const time = Date.now() * 0.001;
+            liquids.forEach((liquid, index) => {
+                liquid.scale.y = 1 + Math.sin(time + index) * 0.02;
+                liquid.position.y = -1.5 + liquid.geometry.parameters.height / 2 * liquid.scale.y + 
+                                    liquids.slice(0, index).reduce((a, b) => a + b.geometry.parameters.height * b.scale.y, 0);
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('resize', onWindowResize, false);
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "itp-qualification",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "frontend:dev": ""
+  },
+  "keywords": [],
+  "author": "memset0",
+  "license": "MIT",
+  "dependencies": {
+    "mdui": "^2.1.2",
+    "react": "^18.3.1"
+  }
+}
