@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from 'vue';
 import Preview from './Preview.vue';
 
-const prompt = ref("请帮我设计一款香水【默认提示词】");
+import { prompt } from '../data.js';
+
+// const temperature = ref(80);
 </script>
 
 <template>

@@ -18,10 +18,12 @@ const adjustZoom = () => {
 	const canvasAspectRatio = canvasWidth.value / canvasHeight.value;
 	const containerAspectRatio = width.value / height.value;
 
+	const rate = 0.88;
+
 	if (canvasAspectRatio > containerAspectRatio) {
-		zoom.value = width.value / canvasWidth.value;
+		zoom.value = width.value / canvasWidth.value * rate;
 	} else {
-		zoom.value = height.value / canvasHeight.value;
+		zoom.value = height.value / canvasHeight.value * rate;
 	}
 };
 

@@ -32,7 +32,12 @@ const handleDrawerOpenChange = (event) => {
         <mdui-icon-menu></mdui-icon-menu>
       </mdui-button-icon>
       <div style="flex-grow: 1"></div>
-      <mdui-top-app-bar-title class="appbar-title">AI × PERFUME</mdui-top-app-bar-title>
+      <mdui-top-app-bar-title class="appbar-title">
+        <!-- <span style="background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">AI × FRAGRANCE</span> -->
+        <span style="background-color: #764ba2">AI</span>
+        <span style="background-color: rgba(0,0,0,0.3)"> × </span>
+        <span style="background-color: #e2d1c3">FRAGRANCE</span>
+      </mdui-top-app-bar-title>
     </mdui-top-app-bar>
 
     <mdui-navigation-drawer :open="isDrawerOpen" @open-change="handleDrawerOpenChange" close-on-overlay-click>
@@ -59,6 +64,14 @@ const handleDrawerOpenChange = (event) => {
   /* font-weight: 400; */
   font-family: 'Roboto Slab', serif;
 }
+
+.appbar-title span {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
 
 @media (max-width: 840px) {
   .appbar-title {

@@ -1,4 +1,5 @@
 import { themeFromSourceColor, argbFromHex } from '@material/material-color-utilities';
+import { components } from '../data.js';
 
 export function drawPerfumeBottle() {
   // 获取canvas元素和2D绘图上下文
@@ -17,24 +18,8 @@ export function drawPerfumeBottle() {
   const waveSpeed = 1000; // 波浪越小速度越快
   const waveAmplitude = 5; // 波浪振幅
 
-  // 定义液体层参数
-  const layers = [
-    {
-      color: '#F75C2F',
-      height: 0.3,
-      phase: 1.25,
-    },
-    {
-      color: '#F8C3CD',
-      height: 0.4,
-      phase: 0,
-    },
-    {
-      color: '#86473F',
-      height: 0.3,
-      phase: 2.123123,
-    },
-  ];
+  // 定义液体层参数`
+  const layers = components;
 
   function convertToLiquidColor(color, rate) {
     const theme = themeFromSourceColor(argbFromHex(color));
@@ -104,9 +89,14 @@ export function drawPerfumeBottle() {
     ctx.closePath();
     ctx.clip(); // 应用裁剪，确保液体只在瓶子内部绘制
 
+    let totalHeight = 0;
+    layers.forEach((layer) => {
+      totalHeight += layer.height;
+    });
+
     let currentHeight = bottleY + bottleHeight - liquidHeight;
     layers.forEach((layer, index) => {
-      const layerHeight = liquidHeight * layer.height;
+      const layerHeight = liquidHeight * (layer.height / totalHeight);
       // console.log('animated', index, layer.height, currentHeight);
 
       // 设置填充颜色，如果是悬停层则变为高亮颜色
