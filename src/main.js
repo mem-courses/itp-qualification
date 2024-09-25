@@ -7,8 +7,8 @@ import 'mdui/mdui.css';
 import '@mdui/icons/menu.js';
 import '@mdui/icons/insights.js';
 
-import { setColorScheme } from 'mdui/functions/setColorScheme.js';
-setColorScheme('#0061a4');
+// import { setColorScheme } from 'mdui/functions/setColorScheme.js';
+// setColorScheme('#0061a4');
 
 import App from './App.vue';
 
