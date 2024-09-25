@@ -1,11 +1,36 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useElementSize } from '@vueuse/core';
 import CanvasNest from 'canvas-nest.js';
 
 const canvasWidth = ref(300);
 const canvasHeight = ref(700);
+const previewRef = ref(null);
+const { width, height } = useElementSize(previewRef);
+
+const zoom = ref(1);
+
+// 添加一个函数来调整 zoom
+const adjustZoom = () => {
+	if (!canvasWidth.value || !canvasHeight.value || !width.value || !height.value) return;
+
+	const canvasAspectRatio = canvasWidth.value / canvasHeight.value;
+	const containerAspectRatio = width.value / height.value;
+
+	if (canvasAspectRatio > containerAspectRatio) {
+		zoom.value = width.value / canvasWidth.value;
+	} else {
+		zoom.value = height.value / canvasHeight.value;
+	}
+};
+
+// 监听宽高变化
+watch([width, height], () => {
+	adjustZoom();
+});
 
 onMounted(() => {
+	// 生成 nest 粒子效果
 	new CanvasNest(document.getElementById('preview'), {
 		color: '100,100,100',
 		pointColor: '150,150,150',
@@ -13,12 +38,173 @@ onMounted(() => {
 		zIndex: 10,
 		opacity: 0.5,
 	});
+	// 初始化缩放比
+	adjustZoom();
+	// 绘制香水瓶
+	drawPerfumeBottle();
 });
+
+function drawPerfumeBottle() {
+
+	// 获取canvas元素和2D绘图上下文
+	const canvas = document.getElementById('perfume-bottle');
+	const ctx = canvas.getContext('2d');
+
+	// 定义香水瓶的参数
+	const bottleWidth = 150; // 瓶子宽度
+	const bottleHeight = 600; // 瓶子高度
+	const bottleX = (canvas.width - bottleWidth) / 2; // 瓶子左上角X坐标
+	const bottleY = 50; // 瓶子左上角Y坐标
+	// const bottleRadius = bottleWidth / 3; // 瓶子底部圆角半径
+	const bottomCurveHeight = bottleWidth / 3; // 底部曲线的高度
+
+	// 定义液体层参数
+	const layers = [
+		{
+			color: 'rgba(255, 0, 0, 0.5)',
+			height: 0.3,
+			phase: 0,
+			originalColor: 'rgba(255, 0, 0, 0.5)',
+		},
+		{
+			color: 'rgba(0, 255, 0, 0.5)',
+			height: 0.3,
+			phase: 2,
+			originalColor: 'rgba(0, 255, 0, 0.5)',
+		},
+		{
+			color: 'rgba(0, 0, 255, 0.5)',
+			height: 0.2,
+			phase: 4,
+			originalColor: 'rgba(0, 0, 255, 0.5)',
+		},
+	];
+
+	// 跟踪当前鼠标悬停的液体层
+	let hoveredLayer = -1;
+
+	// 绘制香水瓶轮廓
+	function drawBottle() {
+		ctx.strokeStyle = 'rgba(200, 200, 200, 0.8)';
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+
+		// 绘制瓶身左侧
+		ctx.moveTo(bottleX, bottleY);
+		ctx.lineTo(bottleX, bottleY + bottleHeight - bottomCurveHeight);
+
+		// 绘制底部曲线
+		ctx.quadraticCurveTo(
+			bottleX + bottleWidth / 2,
+			bottleY + bottleHeight + bottomCurveHeight,
+			bottleX + bottleWidth,
+			bottleY + bottleHeight - bottomCurveHeight,
+		);
+
+		// 绘制瓶身右侧
+		ctx.lineTo(bottleX + bottleWidth, bottleY);
+
+		ctx.stroke();
+	}
+
+	// 绘制液体层
+	function drawLayers(time) {
+		ctx.save(); // 保存当前绘图状态
+
+		// 创建瓶子形状的裁剪路径
+		ctx.beginPath();
+		ctx.moveTo(bottleX, bottleY);
+		ctx.lineTo(bottleX, bottleY + bottleHeight - bottomCurveHeight);
+		ctx.quadraticCurveTo(
+			bottleX + bottleWidth / 2,
+			bottleY + bottleHeight + bottomCurveHeight,
+			bottleX + bottleWidth,
+			bottleY + bottleHeight - bottomCurveHeight,
+		);
+		ctx.lineTo(bottleX + bottleWidth, bottleY);
+		ctx.closePath();
+		ctx.clip(); // 应用裁剪，确保液体只在瓶子内部绘制
+
+		let currentHeight = bottleY + bottleHeight;
+		layers.forEach((layer, index) => {
+			const layerHeight = bottleHeight * layer.height;
+			currentHeight -= layerHeight;
+
+			// 设置填充颜色，如果是悬停层则变为红色
+			ctx.fillStyle = index === hoveredLayer ? 'rgba(255, 0, 0, 0.5)' : layer.color;
+			ctx.beginPath();
+			ctx.moveTo(bottleX, currentHeight);
+
+			// 绘制波浪效果
+			for (let x = 0; x <= bottleWidth; x++) {
+				const y = Math.sin((x / 50 + time / 2000 + layer.phase) * Math.PI) * 3;
+				ctx.lineTo(bottleX + x, currentHeight + y);
+			}
+
+			ctx.lineTo(bottleX + bottleWidth, bottleY + bottleHeight);
+			ctx.lineTo(bottleX, bottleY + bottleHeight);
+			ctx.closePath();
+			ctx.fill();
+		});
+
+		ctx.restore(); // 恢复之前的绘图状态
+	}
+
+	// 动画循环函数
+	function animate(time) {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		drawBottle();
+		drawLayers(time);
+		requestAnimationFrame(animate);
+	}
+
+	// 获取鼠标悬停的液体层索引
+	function getHoveredLayer(mouseY) {
+		let currentHeight = bottleY + bottleHeight;
+		for (let i = layers.length - 1; i >= 0; i--) {
+			const layerHeight = bottleHeight * layers[i].height;
+			currentHeight -= layerHeight;
+			if (mouseY > currentHeight) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	// 鼠标移动事件监听器
+	canvas.addEventListener('mousemove', (event) => {
+		const rect = canvas.getBoundingClientRect();
+		const mouseX = event.clientX - rect.left;
+		const mouseY = event.clientY - rect.top;
+
+		// 检查鼠标是否在瓶子区域内
+		if (
+			mouseX >= bottleX &&
+			mouseX <= bottleX + bottleWidth &&
+			mouseY >= bottleY &&
+			mouseY <= bottleY + bottleHeight
+		) {
+			hoveredLayer = getHoveredLayer(mouseY);
+		} else {
+			hoveredLayer = -1;
+		}
+	});
+
+	// 鼠标移出画布事件监听器
+	canvas.addEventListener('mouseout', () => {
+		hoveredLayer = -1;
+	});
+
+	// 启动动画
+	animate(0);
+}
 </script>
 
 <template>
-	<mdui-card class="preview" id="preview" variant="elevated">
-		<canvas id="perfume-bottle" :width="canvasWidth" :height="canvasHeight"></canvas>
+	<mdui-card ref="previewRef" class="preview" id="preview" variant="elevated">
+		<div class="canvas-container">
+			<canvas id="perfume-bottle" class="perfume-bottle" :width="canvasWidth" :height="canvasHeight"></canvas>
+		</div>
 	</mdui-card>
 </template>
 
@@ -27,5 +213,22 @@ onMounted(() => {
 	background: white;
 	width: 100%;
 	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.canvas-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+}
+
+.perfume-bottle {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
 }
 </style>

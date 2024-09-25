@@ -74,6 +74,8 @@ const prompt = ref("请帮我设计一款香水【默认提示词】");
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
+	border-radius: var(--shape-corner) !important;
+	overflow: hidden;
 }
 
 .prompt-textarea::part(textarea) {
