@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh">
   <head>
     <meta charset="UTF-8" />
@@ -27,9 +27,24 @@
 
       // 定义液体层参数
       const layers = [
-        { color: 'rgba(255, 0, 0, 0.5)', height: 0.3, phase: 0, originalColor: 'rgba(255, 0, 0, 0.5)' },
-        { color: 'rgba(0, 255, 0, 0.5)', height: 0.3, phase: 2, originalColor: 'rgba(0, 255, 0, 0.5)' },
-        { color: 'rgba(0, 0, 255, 0.5)', height: 0.2, phase: 4, originalColor: 'rgba(0, 0, 255, 0.5)' },
+        {
+          color: 'rgba(255, 0, 0, 0.5)',
+          height: 0.3,
+          phase: 0,
+          originalColor: 'rgba(255, 0, 0, 0.5)',
+        },
+        {
+          color: 'rgba(0, 255, 0, 0.5)',
+          height: 0.3,
+          phase: 2,
+          originalColor: 'rgba(0, 255, 0, 0.5)',
+        },
+        {
+          color: 'rgba(0, 0, 255, 0.5)',
+          height: 0.2,
+          phase: 4,
+          originalColor: 'rgba(0, 0, 255, 0.5)',
+        },
       ];
 
       // 跟踪当前鼠标悬停的液体层
@@ -47,8 +62,10 @@
 
         // 绘制底部曲线
         ctx.quadraticCurveTo(
-          bottleX + bottleWidth / 2, bottleY + bottleHeight + bottomCurveHeight, 
-          bottleX + bottleWidth, bottleY + bottleHeight - bottomCurveHeight
+          bottleX + bottleWidth / 2,
+          bottleY + bottleHeight + bottomCurveHeight,
+          bottleX + bottleWidth,
+          bottleY + bottleHeight - bottomCurveHeight,
         );
 
         // 绘制瓶身右侧
@@ -66,8 +83,10 @@
         ctx.moveTo(bottleX, bottleY);
         ctx.lineTo(bottleX, bottleY + bottleHeight - bottomCurveHeight);
         ctx.quadraticCurveTo(
-          bottleX + bottleWidth / 2, bottleY + bottleHeight + bottomCurveHeight, 
-          bottleX + bottleWidth, bottleY + bottleHeight - bottomCurveHeight
+          bottleX + bottleWidth / 2,
+          bottleY + bottleHeight + bottomCurveHeight,
+          bottleX + bottleWidth,
+          bottleY + bottleHeight - bottomCurveHeight,
         );
         ctx.lineTo(bottleX + bottleWidth, bottleY);
         ctx.closePath();
@@ -126,7 +145,12 @@
         const mouseY = event.clientY - rect.top;
 
         // 检查鼠标是否在瓶子区域内
-        if (mouseX >= bottleX && mouseX <= bottleX + bottleWidth && mouseY >= bottleY && mouseY <= bottleY + bottleHeight) {
+        if (
+          mouseX >= bottleX &&
+          mouseX <= bottleX + bottleWidth &&
+          mouseY >= bottleY &&
+          mouseY <= bottleY + bottleHeight
+        ) {
           hoveredLayer = getHoveredLayer(mouseY);
         } else {
           hoveredLayer = -1;

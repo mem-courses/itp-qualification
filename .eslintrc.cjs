@@ -13,5 +13,6 @@ module.exports = {
   },
   rules: {
     'vue/no-deprecated-slot-attribute': 'off',
+    'vue/multi-word-component-names': 'off',
   },
 };
