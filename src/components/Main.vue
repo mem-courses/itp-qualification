@@ -59,15 +59,19 @@ const prompt = ref("请帮我设计一款香水【默认提示词】");
 }
 
 .part {
-	flex: 1;
 	margin: -1em;
 }
 
 .left.part {
+	flex: 3;
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
 	/* 防止内容溢出 */
+}
+
+.right.part {
+	flex: 2;
 }
 
 .prompt-textarea {
