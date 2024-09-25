@@ -12,15 +12,15 @@ const prompt = ref("请帮我设计一款香水【默认提示词】");
 				placeholder="在这里键入提示词来得到你想要的香水哦..." rows="3" maxlength="200" counter></mdui-text-field>
 
 			<mdui-list>
+				<!-- <mdui-collapse-item>
+					<mdui-list-item slot="header">Item 1</mdui-list-item>
+					<div style="margin-left: 2.5rem">
+						<mdui-list-item>Item 1 - subitem</mdui-list-item>
+						<mdui-list-item>Item 1 - subitem</mdui-list-item>
+						<mdui-list-item>Item 1 - subitem</mdui-list-item>
+					</div>
+				</mdui-collapse-item> -->
 				<mdui-collapse accordion>
-					<mdui-collapse-item>
-						<mdui-list-item slot="header">Item 1</mdui-list-item>
-						<div style="margin-left: 2.5rem">
-							<mdui-list-item>Item 1 - subitem</mdui-list-item>
-							<mdui-list-item>Item 1 - subitem</mdui-list-item>
-							<mdui-list-item>Item 1 - subitem</mdui-list-item>
-						</div>
-					</mdui-collapse-item>
 					<mdui-collapse-item>
 						<mdui-list-item slot="header">
 							<mdui-icon-insights slot="icon"></mdui-icon-insights>
@@ -106,5 +106,10 @@ const prompt = ref("请帮我设计一款香水【默认提示词】");
 		height: 1px;
 		margin: 3em 0;
 	}
+}
+
+mdui-list-item {
+	border-radius: var(--shape-corner) !important;
+	overflow: hidden;
 }
 </style>

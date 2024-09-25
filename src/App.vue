@@ -49,14 +49,21 @@ const handleDrawerOpenChange = (event) => {
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
+
 .appbar-title {
   text-align: right;
   padding-right: 1rem;
+  letter-spacing: 1px;
+  font-size: 2rem;
+  /* font-weight: 400; */
+  font-family: 'Roboto Slab', serif;
 }
 
 @media (max-width: 840px) {
   .appbar-title {
     text-align: center;
+    font-size: 1.6rem;
     padding-right: calc(40px + 0.5rem);
   }
 }
