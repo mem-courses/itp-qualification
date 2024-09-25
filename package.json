@@ -11,6 +11,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@mdui/icons": "^1.0.2",
+    "canvas-nest.js": "^2.0.4",
+    "mdui": "^2.1.2",
     "vue": "^3.4.29"
   },
   "devDependencies": {
