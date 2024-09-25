@@ -20,17 +20,17 @@ export function drawPerfumeBottle() {
   // 定义液体层参数
   const layers = [
     {
-      color: '#ff0000',
-      height: 0.4,
-      phase: 0,
-    },
-    {
-      color: '#00ff00',
+      color: '#F75C2F',
       height: 0.3,
       phase: 1.25,
     },
     {
-      color: '#0000ff',
+      color: '#F8C3CD',
+      height: 0.4,
+      phase: 0,
+    },
+    {
+      color: '#86473F',
       height: 0.3,
       phase: 2.123123,
     },
@@ -49,7 +49,7 @@ export function drawPerfumeBottle() {
   }
 
   for (const layer of layers) {
-    layer.liquidColor = convertToLiquidColor(layer.color, 84);
+    layer.liquidColor = convertToLiquidColor(layer.color, 88);
     layer.highlightColor = convertToLiquidColor(layer.color, 70);
   }
 
