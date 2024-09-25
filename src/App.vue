@@ -51,6 +51,7 @@ const handleDrawerOpenChange = (event) => {
 <style scoped>
 .appbar-title {
   text-align: right;
+  padding-right: 1rem;
 }
 
 @media (max-width: 840px) {

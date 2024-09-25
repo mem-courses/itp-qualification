@@ -4,7 +4,7 @@ import { useElementSize } from '@vueuse/core';
 import CanvasNest from 'canvas-nest.js';
 
 const canvasWidth = ref(300);
-const canvasHeight = ref(700);
+const canvasHeight = ref(600);
 const previewRef = ref(null);
 const { width, height } = useElementSize(previewRef);
 
@@ -34,7 +34,7 @@ onMounted(() => {
 	new CanvasNest(document.getElementById('preview'), {
 		color: '100,100,100',
 		pointColor: '150,150,150',
-		count: 28,
+		count: 50,
 		zIndex: 10,
 		opacity: 0.5,
 	});
@@ -51,84 +51,95 @@ function drawPerfumeBottle() {
 	const ctx = canvas.getContext('2d');
 
 	// 定义香水瓶的参数
-	const bottleWidth = 150; // 瓶子宽度
-	const bottleHeight = 600; // 瓶子高度
+	const bottleWidth = 200; // 瓶子宽度
+	const bottleHeight = 520; // 瓶子高度
+	const liquidHeight = bottleHeight * 0.8; // 液体高度
 	const bottleX = (canvas.width - bottleWidth) / 2; // 瓶子左上角X坐标
-	const bottleY = 50; // 瓶子左上角Y坐标
-	// const bottleRadius = bottleWidth / 3; // 瓶子底部圆角半径
-	const bottomCurveHeight = bottleWidth / 3; // 底部曲线的高度
+	const bottleY = 40; // 瓶子左上角Y坐标
+	const cornerRadius = bottleWidth / 5; // 瓶子底部圆角半径
+	// const bottomCurveHeight = bottleWidth / 3; // 底部曲线的高度
+
+
+	const waveSpeed = 1000; // 波浪越小速度越快
+	const waveAmplitude = 5; // 波浪振幅
 
 	// 定义液体层参数
 	const layers = [
 		{
-			color: 'rgba(255, 0, 0, 0.5)',
-			height: 0.3,
+			color: 'rgb(255, 0, 0)',
+			height: 0.4,
 			phase: 0,
-			originalColor: 'rgba(255, 0, 0, 0.5)',
+			originalColor: 'rgb(255, 0, 0)',
 		},
 		{
-			color: 'rgba(0, 255, 0, 0.5)',
+			color: 'rgb(0, 255, 0)',
 			height: 0.3,
 			phase: 2,
-			originalColor: 'rgba(0, 255, 0, 0.5)',
+			originalColor: 'rgb(0, 255, 0)',
 		},
 		{
-			color: 'rgba(0, 0, 255, 0.5)',
-			height: 0.2,
+			color: 'rgb(0, 0, 255)',
+			height: 0.3,
 			phase: 4,
-			originalColor: 'rgba(0, 0, 255, 0.5)',
+			originalColor: 'rgb(0, 0, 255)',
 		},
 	];
 
 	// 跟踪当前鼠标悬停的液体层
 	let hoveredLayer = -1;
 
-	// 绘制香水瓶轮廓
-	function drawBottle() {
-		ctx.strokeStyle = 'rgba(200, 200, 200, 0.8)';
-		ctx.lineWidth = 2;
-		ctx.beginPath();
-
+	// 瓶身路径
+	function drawBottlePath(ctx) {
 		// 绘制瓶身左侧
 		ctx.moveTo(bottleX, bottleY);
-		ctx.lineTo(bottleX, bottleY + bottleHeight - bottomCurveHeight);
+		ctx.lineTo(bottleX, bottleY + bottleHeight - cornerRadius);
 
-		// 绘制底部曲线
-		ctx.quadraticCurveTo(
-			bottleX + bottleWidth / 2,
-			bottleY + bottleHeight + bottomCurveHeight,
+		// 绘制左下圆角
+		ctx.arcTo(
+			bottleX,
+			bottleY + bottleHeight,
+			bottleX + cornerRadius,
+			bottleY + bottleHeight,
+			cornerRadius
+		);
+
+		// 绘制底部
+		ctx.lineTo(bottleX + bottleWidth - cornerRadius, bottleY + bottleHeight);
+
+		// 绘制右下圆角
+		ctx.arcTo(
 			bottleX + bottleWidth,
-			bottleY + bottleHeight - bottomCurveHeight,
+			bottleY + bottleHeight,
+			bottleX + bottleWidth,
+			bottleY + bottleHeight - cornerRadius,
+			cornerRadius
 		);
 
 		// 绘制瓶身右侧
 		ctx.lineTo(bottleX + bottleWidth, bottleY);
+	}
 
+	// 绘制香水瓶轮廓
+	function drawBottle() {
+		ctx.strokeStyle = '#a0a0a0';
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+		drawBottlePath(ctx);
 		ctx.stroke();
 	}
 
 	// 绘制液体层
 	function drawLayers(time) {
 		ctx.save(); // 保存当前绘图状态
-
-		// 创建瓶子形状的裁剪路径
 		ctx.beginPath();
-		ctx.moveTo(bottleX, bottleY);
-		ctx.lineTo(bottleX, bottleY + bottleHeight - bottomCurveHeight);
-		ctx.quadraticCurveTo(
-			bottleX + bottleWidth / 2,
-			bottleY + bottleHeight + bottomCurveHeight,
-			bottleX + bottleWidth,
-			bottleY + bottleHeight - bottomCurveHeight,
-		);
-		ctx.lineTo(bottleX + bottleWidth, bottleY);
+		drawBottlePath(ctx);
 		ctx.closePath();
 		ctx.clip(); // 应用裁剪，确保液体只在瓶子内部绘制
 
-		let currentHeight = bottleY + bottleHeight;
+		let currentHeight = bottleY + bottleHeight - liquidHeight;
 		layers.forEach((layer, index) => {
-			const layerHeight = bottleHeight * layer.height;
-			currentHeight -= layerHeight;
+			const layerHeight = liquidHeight * layer.height;
+			// console.log('animated', index, layer.height, currentHeight);
 
 			// 设置填充颜色，如果是悬停层则变为红色
 			ctx.fillStyle = index === hoveredLayer ? 'rgba(255, 0, 0, 0.5)' : layer.color;
@@ -137,7 +148,7 @@ function drawPerfumeBottle() {
 
 			// 绘制波浪效果
 			for (let x = 0; x <= bottleWidth; x++) {
-				const y = Math.sin((x / 50 + time / 2000 + layer.phase) * Math.PI) * 3;
+				const y = Math.sin((x / 80 + time / waveSpeed + layer.phase + index * 0.5) * Math.PI) * waveAmplitude;
 				ctx.lineTo(bottleX + x, currentHeight + y);
 			}
 
@@ -145,6 +156,8 @@ function drawPerfumeBottle() {
 			ctx.lineTo(bottleX, bottleY + bottleHeight);
 			ctx.closePath();
 			ctx.fill();
+
+			currentHeight += layerHeight;
 		});
 
 		ctx.restore(); // 恢复之前的绘图状态
@@ -160,9 +173,9 @@ function drawPerfumeBottle() {
 
 	// 获取鼠标悬停的液体层索引
 	function getHoveredLayer(mouseY) {
-		let currentHeight = bottleY + bottleHeight;
+		let currentHeight = bottleY + liquidHeight; // ????
 		for (let i = layers.length - 1; i >= 0; i--) {
-			const layerHeight = bottleHeight * layers[i].height;
+			const layerHeight = liquidHeight * layers[i].height;
 			currentHeight -= layerHeight;
 			if (mouseY > currentHeight) {
 				return i;
@@ -185,6 +198,7 @@ function drawPerfumeBottle() {
 			mouseY <= bottleY + bottleHeight
 		) {
 			hoveredLayer = getHoveredLayer(mouseY);
+			console.log('hoveredLayer', hoveredLayer);
 		} else {
 			hoveredLayer = -1;
 		}
@@ -224,6 +238,7 @@ function drawPerfumeBottle() {
 	align-items: center;
 	width: 100%;
 	height: 100%;
+	opacity: 0.7;
 }
 
 .perfume-bottle {
