@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import { prompt, insights, ingredients } from '../data.js';
 import Preview from './Preview.vue';
+import Price from './Price.vue';
 import DialogBuy from './DialogBuy.vue';
 import DialogOption from './DialogOption.vue';
 
@@ -79,15 +80,21 @@ onMounted(() => {
 					<mdui-button slot="action" variant="text">取消</mdui-button>
 					<mdui-button slot="action" variant="tonal">保存</mdui-button>
 				</mdui-dialog>
-				<mdui-button variant="tonal" class="action">高级选项</mdui-button>
+				<mdui-button variant="tonal" class="action">
+					高级选项
+					<!-- <mdui-icon-settings slot="end-icon"></mdui-icon-settings> -->
+				</mdui-button>
 
 				<mdui-dialog id="buy-dialog" close-on-overlay-click close-on-esc>
 					<mdui-top-app-bar-title>订单 #123456</mdui-top-app-bar-title>
 					<DialogBuy />
-					<mdui-button slot="action" variant="text">取消</mdui-button>
-					<mdui-button slot="action" variant="filled">开始定制</mdui-button>
+					<Price slot="action" />
+					<mdui-button slot="action" variant="filled">立即购买</mdui-button>
 				</mdui-dialog>
-				<mdui-button class="action">开始定制</mdui-button>
+				<mdui-button class="action">
+					开始定制
+					<!-- <mdui-icon-arrow-forward slot="end-icon"></mdui-icon-arrow-forward> -->
+				</mdui-button>
 			</div>
 
 
@@ -152,7 +159,7 @@ onMounted(() => {
 }
 
 .item-content {
-	margin-left: 1.5rem;
+	margin-left: 2.5rem;
 	/* margin-top: 0.5rem; */
 	line-height: 1.5rem;
 }
@@ -208,6 +215,7 @@ mdui-list-item .container {
 .action-group .action {
 	flex: 1;
 	margin: 0 0.5em;
+	font-size: 0.90rem;
 }
 
 .action-group .action:first-child {
@@ -226,7 +234,6 @@ mdui-list-item .container {
 mdui-dialog mdui-top-app-bar-title {
 	font-size: 1.5rem;
 	padding: 0.5rem;
-	padding-bottom: 1rem;
 }
 
 ::v-deep(#options-dialog)::part(panel),

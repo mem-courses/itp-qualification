@@ -13,9 +13,26 @@
 }
 
 .dialog-content {
-  overflow-y: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 .dialog-content .label {
   color: rgb(var(--mdui-color-primary));
+  margin-top: 1rem;
   padding-bottom: 0.5rem;
+  font-size: 0.82rem;
+}
+
+.dialog-content mdui-slider {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+.dialog-content mdui-radio-group {
+  margin-left: -0.25rem !important;
+  margin-right: -0.25rem !important;
+}
+.dialog-content mdui-radio {
+  margin-right: 0.5rem;
 }
