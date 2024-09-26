@@ -8,7 +8,6 @@ import DialogBuy from './DialogBuy.vue';
 import DialogOption from './DialogOption.vue';
 
 onMounted(() => {
-	createSnackbar('Hello World');
 	{
 		const dialog = document.getElementById("options-dialog");
 		console.log('!', dialog);
