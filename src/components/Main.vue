@@ -1,12 +1,14 @@
 <script setup>
 import { onMounted } from 'vue';
 import { prompt, insights, ingredients } from '../data.js';
+import { createSnackbar } from '../snackbar.js';
 import Preview from './Preview.vue';
 import Price from './Price.vue';
 import DialogBuy from './DialogBuy.vue';
 import DialogOption from './DialogOption.vue';
 
 onMounted(() => {
+	createSnackbar('Hello World');
 	{
 		const dialog = document.getElementById("options-dialog");
 		console.log('!', dialog);
@@ -31,8 +33,9 @@ onMounted(() => {
 <template>
 	<mdui-card class="main container" variant="elevated">
 		<div class="left part">
-			<mdui-text-field class="prompt-textarea" label="提示词" :value="prompt" @input="prompt = $event.target.value"
-				placeholder="在这里键入提示词来得到你想要的香水哦..." rows="3" maxlength="200" counter></mdui-text-field>
+			<mdui-text-field id="prompt" class="prompt-textarea" label="提示词" :value="prompt"
+				@input="prompt = $event.target.value" placeholder="在这里键入提示词来得到你想要的香水哦..." rows="3" maxlength="200"
+				counter></mdui-text-field>
 
 			<!-- <mdui-slider value="80" name="温度"></mdui-slider> -->
 
@@ -54,7 +57,8 @@ onMounted(() => {
 					成分 Ingredients
 				</mdui-list-item>
 				<div class="item-content">
-					<mdui-chip v-for="ingredient in ingredients" :key="ingredient.name" class="item ingredient">
+					<mdui-chip v-for="ingredient in ingredients" :key="ingredient.name" class="item ingredient"
+						@click="createSnackbar(ingredient.description)">
 						{{ ingredient.name }}
 						<div :style="{ backgroundColor: ingredient.color }" class="ingredient-color"></div>
 					</mdui-chip>
@@ -141,8 +145,6 @@ onMounted(() => {
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
-	border-radius: var(--shape-corner) !important;
-	overflow: hidden;
 }
 
 .prompt-textarea::part(textarea) {
@@ -190,6 +192,12 @@ onMounted(() => {
 		height: 1px;
 		margin: 3em 0;
 	}
+}
+
+mdui-list {
+	margin-top: -1rem;
+	padding-top: 0rem !important;
+	padding-bottom: 0.75rem !important;
 }
 
 mdui-list-item {
@@ -240,5 +248,18 @@ mdui-dialog mdui-top-app-bar-title {
 ::v-deep(#buy-dialog)::part(panel) {
 	width: 40rem !important;
 	max-width: 80vw !important;
+}
+
+
+::v-deep(#prompt)::part(container) {
+	border-radius: 0.5rem !important;
+	overflow: hidden;
+}
+
+::v-deep(#prompt)::part(input) {
+	padding-top: 2rem;
+	font-size: 1rem;
+	line-height: 1.75rem;
+	letter-spacing: 0.02rem;
 }
 </style>

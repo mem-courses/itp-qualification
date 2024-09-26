@@ -1,5 +1,5 @@
-import { themeFromSourceColor, argbFromHex } from '@material/material-color-utilities';
-import { components } from '../data.js';
+import { layers } from '../data.js';
+import { createSnackbar } from '../snackbar.js';
 
 export function drawPerfumeBottle() {
   // 获取canvas元素和2D绘图上下文
@@ -7,36 +7,16 @@ export function drawPerfumeBottle() {
   const ctx = canvas.getContext('2d');
 
   // 定义香水瓶的参数
-  const bottleWidth = 200; // 瓶子宽度
-  const bottleHeight = 520; // 瓶子高度
-  const liquidHeight = bottleHeight * 0.8; // 液体高度
+  const bottleWidth = 140; // 瓶子宽度
+  const bottleHeight = 500; // 瓶子高度
+  const liquidHeight = bottleHeight * 0.85; // 液体高度
   const bottleX = (canvas.width - bottleWidth) / 2; // 瓶子左上角X坐标
-  const bottleY = 40; // 瓶子左上角Y坐标
+  const bottleY = 50; // 瓶子左上角Y坐标
   const cornerRadius = bottleWidth / 5; // 瓶子底部圆角半径
   // const bottomCurveHeight = bottleWidth / 3; // 底部曲线的高度
 
   const waveSpeed = 1000; // 波浪越小速度越快
   const waveAmplitude = 5; // 波浪振幅
-
-  // 定义液体层参数`
-  const layers = components;
-
-  function convertToLiquidColor(color, rate) {
-    const theme = themeFromSourceColor(argbFromHex(color));
-    const palette = theme.palettes;
-    const rgbInt = palette.primary.tone(rate);
-    const a = (rgbInt >> 24) & 255;
-    const r = (rgbInt >> 16) & 255;
-    const g = (rgbInt >> 8) & 255;
-    const b = rgbInt & 255;
-    console.log(`rgba(${r}, ${g}, ${b}, ${a})`, rgbInt, color, palette);
-    return `rgb(${r}, ${g}, ${b})`;
-  }
-
-  for (const layer of layers) {
-    layer.liquidColor = convertToLiquidColor(layer.color, 88);
-    layer.highlightColor = convertToLiquidColor(layer.color, 70);
-  }
 
   // 跟踪当前鼠标悬停的液体层
   let hoveredLayer = -1;
@@ -141,6 +121,8 @@ export function drawPerfumeBottle() {
     return -1;
   }
 
+  let lastHoveredLayer = -1;
+
   // 鼠标移动事件监听器
   canvas.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingClientRect();
@@ -155,9 +137,14 @@ export function drawPerfumeBottle() {
       mouseY <= bottleY + bottleHeight
     ) {
       hoveredLayer = getHoveredLayer(mouseY);
-      console.log('hoveredLayer', hoveredLayer);
+      // console.log('hoveredLayer', hoveredLayer);
     } else {
       hoveredLayer = -1;
+    }
+
+    if (hoveredLayer !== -1 && hoveredLayer !== lastHoveredLayer) {
+      lastHoveredLayer = hoveredLayer;
+      createSnackbar(layers[hoveredLayer].description);
     }
   });
 
