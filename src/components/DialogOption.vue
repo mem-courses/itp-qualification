@@ -1,4 +1,14 @@
 <script setup>
+const maskContent = [
+	"请帮助我配置一款香水，满足以下前提：",
+	"1. 请给出使用的每种原料的占比和功用；",
+	"2. 请使用天然原料，避免使用复合配方；",
+	"进一步的要求如下：",
+	"",
+	"''''",
+	"{ { prompt } } ",
+	"''''",
+].join('\n')
 </script>
 
 <template>
@@ -14,9 +24,17 @@
 		<mdui-slider value="80" step="1" min="0" max="100"></mdui-slider>
 		<div class="label">Top P</div>
 		<mdui-slider value="50" step="1" min="0" max="100"></mdui-slider>
-		<div class="label">基准提示词</div>
-		<mdui-text-field rows="5"></mdui-text-field>
+		<div class="label">面具</div>
+		<mdui-text-field id="mask" rows="8" :value="maskContent"></mdui-text-field>
 	</div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* .dialog-content {
+	overflow-y: auto;
+} */
+::v-deep(#mask)::part(input) {
+	font-size: 0.85rem;
+	line-height: 1.1rem;
+}
+</style>
