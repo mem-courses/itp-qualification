@@ -23,3 +23,62 @@ export const components = [
     phase: 2.123123,
   },
 ];
+
+export const insights = ref(['添加xx前调', '删除xx后调', '修改xx标签']);
+
+export const ingredients = ref([
+  {
+    name: '花椒水',
+    rate: 5,
+    color: '#a00000',
+    colorText: '淡红色',
+  },
+  {
+    name: '小豆蔻露',
+    rate: 5,
+    color: '#a00000',
+    colorText: '淡绿色',
+  },
+  {
+    name: '乌木提取物',
+    rate: 20,
+    color: '#a00000',
+    colorText: '深褐色',
+  },
+  {
+    name: '巴西红木鲜榨液',
+    rate: 15,
+    color: '#a00000',
+    colorText: '红棕色',
+  },
+  {
+    name: '檀香冷凝液',
+    rate: 15,
+    color: '#a00000',
+    colorText: '奶白色',
+  },
+  {
+    name: '香根草汁',
+    rate: 10,
+    color: '#a00000',
+    colorText: '深绿色',
+  },
+  {
+    name: '零陵香豆分离产物',
+    rate: 10,
+    color: '#a00000',
+    colorText: '淡黄棕色',
+  },
+  {
+    name: '香草汁',
+    rate: 10,
+    color: '#a00000',
+    colorText: '浅黄色',
+  },
+  {
+    name: '琥珀精华',
+    rate: 10,
+    color: '#a00000',
+    colorText: '金黄色',
+  },
+]);

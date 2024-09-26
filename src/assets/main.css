@@ -11,3 +11,11 @@
   max-width: calc(100% - 3em);
   margin: 0 auto;
 }
+
+.dialog-content {
+  overflow-y: hidden;
+}
+.dialog-content .label {
+  color: rgb(var(--mdui-color-primary));
+  padding-bottom: 0.5rem;
+}
